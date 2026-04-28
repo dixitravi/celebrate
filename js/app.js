@@ -169,17 +169,29 @@ function resetPagination() {
   pastPage = 0;
 }
 
+function shouldShow(section) {
+  return (
+    filters.timeframe === "all" ||
+    filters.timeframe === section
+  );
+}
 
 function renderDashboard() {
-	let events = EVENTS.filter(e =>
-	  (!filters.search || getSearchText(e).includes(filters.search)) &&
-	  (filters.family === "all" || e.family === filters.family) &&
-	  (filters.type === "all" || e.type === filters.type)
-	);
+  // ---------------------------------
+  // 1. Apply base filters
+  // ---------------------------------
+  let events = EVENTS.filter(e =>
+    (!filters.search || getSearchText(e).includes(filters.search)) &&
+    (filters.family === "all" || e.family === filters.family) &&
+    (filters.type === "all" || e.type === filters.type)
+  );
 
-	/* ✅ EXCLUDE missing-date entries from timeline views */
-	events = events.filter(e => e.date !== "2000-01-01");
+  // ✅ Exclude placeholder dates from timeline
+  events = events.filter(e => e.date !== "2000-01-01");
 
+  // ---------------------------------
+  // 2. Categorize events
+  // ---------------------------------
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -189,7 +201,11 @@ function renderDashboard() {
 
   events.forEach(e => {
     const d = new Date(e.date);
-    const currentYearDate = new Date(today.getFullYear(), d.getMonth(), d.getDate());
+    const currentYearDate = new Date(
+      today.getFullYear(),
+      d.getMonth(),
+      d.getDate()
+    );
 
     if (currentYearDate >= today && d.getMonth() === today.getMonth()) {
       priority.push(e);
@@ -200,21 +216,54 @@ function renderDashboard() {
     }
   });
 
-  /* ✅ Sort by urgency */
+  // ✅ Sort by urgency
   priority.sort((a, b) => getDaysInfo(a).days - getDaysInfo(b).days);
   upcoming.sort((a, b) => getDaysInfo(a).days - getDaysInfo(b).days);
   past.sort((a, b) => getDaysInfo(a).days - getDaysInfo(b).days);
 
-  renderPriority(priority);
-  renderList(upcomingList, upcoming, "upcoming");
-  renderList(pastList, past, "past");
+  // ---------------------------------
+  // 3. Cache section elements
+  // ---------------------------------
+  const prioritySection = document.getElementById("prioritySection");
+  const upcomingSection = document.getElementById("upcomingSection");
+  const pastSection = document.getElementById("pastSection");
 
-  priorityCount.textContent = priority.length;
-  upcomingCount.textContent = upcoming.length;
-  pastCount.textContent = past.length;
+  // ---------------------------------
+  // 4. Timeframe‑aware rendering
+  // ---------------------------------
+
+  // ✅ PRIORITY
+  if (filters.timeframe === "all" || filters.timeframe === "priority") {
+    if (prioritySection) prioritySection.style.display = "block";
+    renderPriority(priority);
+    priorityCount.textContent = priority.length;
+  } else {
+    if (prioritySection) prioritySection.style.display = "none";
+  }
+
+  // ✅ UPCOMING
+  if (filters.timeframe === "all" || filters.timeframe === "upcoming") {
+    if (upcomingSection) upcomingSection.style.display = "block";
+    renderList(upcomingList, upcoming, "upcoming");
+    upcomingCount.textContent = upcoming.length;
+  } else {
+    if (upcomingSection) upcomingSection.style.display = "none";
+  }
+
+  // ✅ PAST
+  if (filters.timeframe === "all" || filters.timeframe === "past") {
+    if (pastSection) pastSection.style.display = "block";
+    renderList(pastList, past, "past");
+    pastCount.textContent = past.length;
+  } else {
+    if (pastSection) pastSection.style.display = "none";
+  }
+
+  // ---------------------------------
+  // 5. Missing data is always evaluated
+  // ---------------------------------
   renderMissingData();
 }
-
 /* -----------------------
    For missing date info
 ------------------------ */
