@@ -390,60 +390,86 @@ body {
 
 
 /* ===============================
-   MOBILE
+   MOBILE – Masthead (Final)
 ================================ */
 @media (max-width: 768px) {
+
+  /* Overall masthead stacks */
   .masthead {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
   }
 
+  /* Logo – Row 1 */
+  .brand-logo {
+    height: 40px;          /* ✅ smaller logo */
+    width: auto;
+    align-self: flex-start;
+  }
 
+  /* Controls become a GRID */
   .masthead-controls {
-    flex-direction: row;     /* ✅ keep items in a row */
-    align-items: flex-end;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
     gap: 8px;
-    flex-wrap: wrap;         /* ✅ wrap if needed */
   }
 
-
-  .masthead input {
-    flex: 1 1 100%;
+  /* Row 2: Search + Theme */
+  .search-wrapper {
+    grid-column: 1 / 2;
+    grid-row: 1;
   }
 
-
-	.masthead select {
-	  flex: 1 1 48%;
-	}
-
-	/* ✅ Theme toggle must NOT behave like a dropdown */
-	#themeToggle {
-	  flex: 0 0 auto;
-	  width: auto;
-	}
-
-
-  .list-row {
-    grid-template-columns: 8px 60px 1fr;
-  }
-  
   #themeToggle {
+    grid-column: 2 / 3;
+    grid-row: 1;
     height: 30px;
     min-width: 40px;
-    padding: 6px 10px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  
-  .masthead-controls {
-    max-width: 100%;
-    overflow-x: hidden;
+
+  /* Row 3: Filters + Logout */
+  .filters-row {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .filters-row select {
+    width: 100px;
+    min-width: 100px;
+  }
+
+  #logoutBtn {
+    height: 30px;
+    min-width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .search-wrapper {
+    width: 100%;
+  }
+
+  .search-wrapper input {
+    width: 100%;
   }
 
 
+
+  /* Prevent sideways scrolling */
+  .masthead-controls {
+    overflow-x: hidden;
+  }
+  
 }
+
 
 /* ------------------------------
    Modal
@@ -616,6 +642,13 @@ body {
   gap: 16px;
 }
 
+/* Filters row behaves inline on desktop */
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .filter-group {
   display: flex;
   flex-direction: column; /* ✅ label on top */
@@ -710,4 +743,11 @@ body {
     align-items: center;
     justify-content: center;
   }
+}
+
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--text);
 }
