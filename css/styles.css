@@ -1,0 +1,713 @@
+/* ===============================
+   THEME
+================================ */
+:root {
+  --bg: #FAFAFA;
+  --text: #1f2937;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --accent: #0a4d57;
+
+  --birthday: #0C5868;
+  --anniversary: #7C0A1A;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --text: #e5e7eb;
+  --card: #1e293b;
+  --border: #334155;
+  --accent: #020617;
+}
+
+/* ===============================
+   BASE
+================================ */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+}
+
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+/* Shadow only after scrolling */
+.masthead.scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+.brand-logo {
+  height: 66px;
+  width: auto;
+}
+
+.masthead-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.masthead input,
+.masthead select,
+.masthead button {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+.masthead button {
+  cursor: pointer;
+}
+/* ------------------------------
+   Masthead dropdown sizing
+-------------------------------- */
+
+.masthead-controls select {
+  width: 100px;
+  max-width: 100px;
+  min-width: 100px; /* ✅ THIS fixes it */
+}
+
+
+/* ===============================
+   MAIN
+================================ */
+.container {
+  padding: 24px;
+  flex: 1;
+}
+
+/* ===============================
+   SECTION HEADER
+================================ */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 28px 0 12px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.count {
+  background: var(--border);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+/* ===============================
+   SHOW / HIDE TOGGLE
+================================ */
+.section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+}
+
+.section-toggle:hover {
+  opacity: 0.85;
+}
+
+.toggle-icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* ===============================
+   PRIORITY CARDS
+================================ */
+.priority-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.priority-card {
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  background: var(--card);
+}
+
+.priority-card.birthday .top {
+  background: linear-gradient(90deg, #9ae6e4, #b2f5ea);
+}
+
+.priority-card.anniversary .top {
+  background: linear-gradient(90deg, #feb2b2, #fed7d7);
+}
+
+.priority-card .top {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priority-card .bottom {
+  padding: 12px;
+  font-size: 13px;
+}
+
+.days-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 11px;
+  border-radius: 4px;
+  background: var(--border);
+}
+
+/* ===============================
+   LISTS (Upcoming / Past)
+================================ */
+.list-container {
+  background: var(--card);
+  border-radius: 4px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* ✅ 2-column layout + strip */
+.list-row {
+  display: grid;
+  grid-template-columns: 8px 80px 1fr;
+  gap: 16px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ✅ Alternate row colors */
+/* ✅ Light mode */
+.list-row:nth-child(odd) {
+  background: #ffffff;
+}
+
+.list-row:nth-child(even) {
+  background: #F5F6F7;
+}
+
+/* ✅ Dark mode */
+[data-theme="dark"] .list-row:nth-child(odd) {
+  background: #1e293b;
+}
+
+[data-theme="dark"] .list-row:nth-child(even) {
+  background: #111827;
+}
+
+/* Timeline strip */
+.strip {
+  width: 8px;
+  border-radius: 4px;
+}
+
+.strip.birthday {
+  background: var(--birthday);
+}
+
+.strip.anniversary {
+  background: var(--anniversary);
+}
+
+/* Columns */
+.row-date {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.row-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.row-meta {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+/* ===============================
+   PAGINATION
+================================ */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  font-size: 12px;
+  background: var(--card);
+}
+
+.page-info {
+  opacity: 0.7;
+}
+
+.page-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.page-controls button {
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+}
+
+.page-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-size select {
+  margin: 0 4px;
+}
+
+.pagination,
+.pagination * {
+  color: var(--text);
+}
+/* ===============================
+   Pagination dropdown – Dark mode fix
+================================ */
+
+/* Base (light mode already fine) */
+.pagination select {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* Dark mode explicit override */
+[data-theme="dark"] .pagination select {
+  background: #020617;        /* dark input surface */
+  color: #e5e7eb;             /* light text */
+  border: 1px solid #334155;
+}
+
+/* Also ensure dropdown options are readable */
+[data-theme="dark"] .pagination option {
+  background: #020617;
+  color: #e5e7eb;
+}
+
+/* ===============================
+   COLLAPSIBLE SECTIONS
+================================ */
+.section-content {
+  overflow: hidden;
+  max-height: 2000px;
+  opacity: 1;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+.section-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* ===============================
+   EMPTY STATES
+================================ */
+.empty-state {
+  padding: 16px;
+  font-size: 14px;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+
+.app-footer {
+  display: flex;
+  justify-content: space-between; /* ✅ pushes version to right */
+  align-items: center;
+  padding: 14px 24px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.app-footer .version {
+  opacity: 0.8;
+}
+
+
+/* ===============================
+   MOBILE
+================================ */
+@media (max-width: 768px) {
+  .masthead {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+
+  .masthead-controls {
+    flex-direction: row;     /* ✅ keep items in a row */
+    align-items: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;         /* ✅ wrap if needed */
+  }
+
+
+  .masthead input {
+    flex: 1 1 100%;
+  }
+
+
+	.masthead select {
+	  flex: 1 1 48%;
+	}
+
+	/* ✅ Theme toggle must NOT behave like a dropdown */
+	#themeToggle {
+	  flex: 0 0 auto;
+	  width: auto;
+	}
+
+
+  .list-row {
+    grid-template-columns: 8px 60px 1fr;
+  }
+  
+  #themeToggle {
+    height: 30px;
+    min-width: 40px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .masthead-controls {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+
+}
+
+/* ------------------------------
+   Modal
+-------------------------------- */
+/* ------------------------------
+   Modal (Theme-safe)
+-------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--card);     /* ✅ adapts to light/dark */
+  color: var(--text);          /* ✅ correct text color */
+  padding: 24px;
+  width: 420px;
+  border-radius: 4px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal-section {
+  margin-top: 16px;
+}
+
+.modal-section ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.modal-section li {
+  margin-bottom: 6px;
+}
+
+.close-btn {
+  margin-top: 20px;
+  padding: 6px 12px;
+}
+
+/* ------------------------------
+   Missing Data Section
+-------------------------------- */
+#missingDataSection {
+  margin-top: 32px;
+  padding: 16px;
+  background: var(--card);
+  border-radius: 4px;
+}
+
+.missing-block {
+  margin-top: 16px;
+}
+
+.missing-block ul {
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+.missing-block li {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+/* ------------------------------
+   Missing Data Grid
+-------------------------------- */
+.missing-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(5, auto); /* ✅ 5 items per column */
+  gap: 6px 32px;
+  margin-top: 10px;
+}
+
+.missing-grid div {
+  font-size: 13px;
+}
+
+/* ------------------------------
+   Missing Data – Table layout
+-------------------------------- */
+.missing-table {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.missing-family {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.missing-family h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.missing-group {
+  margin-top: 8px;
+}
+
+.missing-group strong {
+  font-size: 12px;
+}
+
+.missing-group ul {
+  margin: 6px 0 0;
+  padding-left: 16px;
+}
+
+.missing-group li {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+/* ===============================
+   Missing Data – Mobile Friendly
+================================ */
+@media (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .missing-table {
+    grid-auto-flow: row;       /* ✅ stack vertically */
+    grid-auto-columns: 1fr;
+  }
+  
+  .missing-table {
+    margin-right: 0;
+    padding-right: 0;
+  }
+
+
+
+  .missing-family {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  
+  #missingDataSection {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+}
+/* ------------------------------
+   Header Filters – Stacked Labels
+-------------------------------- */
+.masthead-controls {
+  display: flex;
+  align-items: flex-end;  /* ✅ aligns dropdown bottoms */
+  gap: 16px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column; /* ✅ label on top */
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.filter-group select {
+  min-width: 100px;
+}
+
+@media (max-width: 768px) {
+  .masthead-controls {
+    flex-wrap: wrap;
+  }
+}
+
+/* ===============================
+   Theme Toggle Animation
+================================ */
+.theme-icon {
+  display: inline-block;
+  transition:
+    transform 0.35s ease,
+    opacity 0.25s ease;
+}
+
+/* Animation state */
+[data-theme="dark"] .theme-icon {
+  transform: rotate(180deg);
+}
+
+/* ------------------------------
+   Search tooltip
+-------------------------------- */
+.search-wrapper {
+  position: relative;
+}
+
+.search-help {
+  margin-left: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.search-tooltip {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 10px;
+  font-size: 12px;
+  width: 220px;
+  border-radius: 4px;
+  display: none;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.search-wrapper:hover .search-tooltip {
+  display: block;
+}
+
+.search-tooltip ul {
+  margin: 6px 0 0;
+  padding-left: 16px;
+}
+
+.search-tooltip li {
+  margin-bottom: 4px;
+}
+
+#logoutBtn {
+  cursor: pointer;
+  height: 30px;
+  min-width: 40px;
+  padding: 4px 8px;
+  font-size: 14px;
+}
+@media (max-width: 768px) {
+  #logoutBtn {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
