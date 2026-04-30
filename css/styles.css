@@ -194,6 +194,11 @@ body {
   font-size: 13px;
 }
 
+
+#priorityList {
+  padding-bottom: 24px; 
+}
+
 .days-badge {
   display: inline-block;
   margin-left: 6px;
@@ -363,12 +368,22 @@ body {
 /* ===============================
    EMPTY STATES
 ================================ */
+
 .empty-state {
-  padding: 16px;
-  font-size: 14px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  white-space: nowrap;
   text-align: center;
-  color: #6b7280;
+
+  padding: 16px 24px;
+  margin: 24px auto;       /* centers horizontally */
+  background: var(--card);
+  border-radius: 4px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
+
 
 /* ===============================
    FOOTER
