@@ -720,3 +720,83 @@ function getFamilyLabel(familyHead) {
   return familyHead.split(" ")[0];
 }
 
+function generateICS(events) {
+  const pad = n => String(n).padStart(2, "0");
+
+  let ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Celebrate//Family Events//EN",
+    "CALSCALE:GREGORIAN"
+  ];
+
+  events.forEach(e => {
+    const date = new Date(e.date);
+    const y = date.getFullYear();
+    const m = pad(date.getMonth() + 1);
+    const d = pad(date.getDate());
+
+    const title =
+      e.type === "birthday"
+        ? `🎂 ${e.name} Birthday`
+        : `💍 ${e.name} Anniversary`;
+
+    let description = "";
+    if (e.type === "birthday" && e.relation && e.familyHead) {
+      description = `${e.relation} of ${e.familyHead}`;
+    }
+
+    ics.push(
+      "BEGIN:VEVENT",
+      `UID:${e.personId}@celebrate`,
+      `DTSTART;VALUE=DATE:${y}${m}${d}`,
+      "RRULE:FREQ=YEARLY",
+      `SUMMARY:${title}`,
+      description ? `DESCRIPTION:${description}` : "",
+      "END:VEVENT"
+    );
+  });
+
+  ics.push("END:VCALENDAR");
+  return ics.join("\r\n");
+}
+
+function downloadICS(content, filename) {
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("addToCalendarBtn").onclick = () => {
+  const choice = prompt(
+    "Add to calendar:\n\n1 = All Birthdays\n2 = All Anniversaries\n3 = Both\n\n(Type 1, 2, or 3)"
+  );
+
+  if (!choice) return;
+
+  let selected;
+
+  if (choice === "1") {
+    selected = EVENTS.filter(e => e.type === "birthday");
+  } else if (choice === "2") {
+    selected = EVENTS.filter(e => e.type === "anniversary");
+  } else if (choice === "3") {
+    selected = EVENTS.filter(
+      e => e.type === "birthday" || e.type === "anniversary"
+    );
+  } else {
+    alert("Invalid choice");
+    return;
+  }
+
+  const ics = generateICS(selected);
+  downloadICS(ics, "family-events.ics");
+};
