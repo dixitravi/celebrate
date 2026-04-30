@@ -137,13 +137,12 @@ function populateFamilyFilter() {
   const map = new Map();
 
   EVENTS.forEach(e => {
-    if (!e.family || !e.familyHead) return;
+    if (!e.familyHead) return;
 
-    // Use e.family as the FILTER VALUE (canonical)
-    if (!map.has(e.family)) {
-      map.set(e.family, {
-        value: e.family,                  // ✅ used for filtering
-        label: getFamilyLabel(e.familyHead) // ✅ shown in dropdown
+    if (!map.has(e.familyHead)) {
+      map.set(e.familyHead, {
+        value: e.familyHead,                 // ✅ filter by head
+        label: e.familyHead.split(" ")[0]    // ✅ first name only
       });
     }
   });
@@ -152,11 +151,12 @@ function populateFamilyFilter() {
     .sort((a, b) => a.label.localeCompare(b.label));
 
   familyFilter.innerHTML =
-    `<option value="all">All families</option>` +
+    '<option value="all">All families</option>' +
     sorted
       .map(f => `<option value="${f.value}">${f.label}</option>`)
       .join("");
 }
+
 
 
 /* -----------------------
@@ -182,7 +182,7 @@ function renderDashboard() {
   // ---------------------------------
   let events = EVENTS.filter(e =>
     (!filters.search || getSearchText(e).includes(filters.search)) &&
-    (filters.family === "all" || e.family === filters.family) &&
+    (filters.family === "all" || e.familyHead === filters.family) &&
     (filters.type === "all" || e.type === filters.type)
   );
 
@@ -353,38 +353,47 @@ function renderMissingData() {
    Priority cards
 ------------------------ */
 function renderPriority(list) {
+  // Empty state
   if (!list.length) {
     priorityList.innerHTML =
-      '<div class="empty-state">🎉 No celebrations this month</div>';
+      '<div class="empty-state">🎉 No upcoming birthdays or anniversaries this month</div>';
     return;
   }
 
-  priorityList.innerHTML = list.map(e => {
-    const info = getDaysInfo(e);
-    return `
-      <div class="priority-card ${e.type}">
-        <div class="top">
-          <div>
-            <strong>${e.name}</strong><br>
-            <small>${e.type}</small>
+  priorityList.innerHTML = `
+    <div class="priority-grid">
+      ${list.map(e => {
+        const info = getDaysInfo(e);
+
+        return `
+          <div class="priority-card ${e.type}">
+            <div class="top">
+              <div>
+                <strong>
+                  ${e.name}${e.nickname ? ` (${e.nickname})` : ""}
+                </strong><br>
+                ${e.relation ? `<small>${e.relation}</small>` : ""}
+              </div>
+              <div>${e.type === "birthday" ? "🎂" : "💍"}</div>
+            </div>
+
+            <div class="bottom">
+              ${formatDate(e.date)}
+              <span class="days-badge">
+                ${
+                  info.days === 0
+                    ? "Today 🎉"
+                    : info.isPast
+                    ? `${info.days} days ago`
+                    : `In ${info.days} days`
+                }
+              </span>
+            </div>
           </div>
-          <div>${e.type === "birthday" ? "🎂" : "💍"}</div>
-        </div>
-        <div class="bottom">
-          ${formatDate(e.date)}
-          <span class="days-badge">
-            ${
-              info.days === 0
-                ? "Today 🎉"
-                : info.isPast
-                ? `${info.days} days ago`
-                : `In ${info.days} days`
-            }
-          </span>
-        </div>
-      </div>
-    `;
-  }).join("");
+        `;
+      }).join("")}
+    </div>
+  `;
 }
 
 /* -----------------------------
@@ -456,21 +465,33 @@ function renderList(container, list, type) {
 
     let metaText = "";
 
-    /* ✅ Birthday logic */
+    /* ✅ Birthday logic WITH refined family‑head handling */
     if (e.type === "birthday") {
-      if (e.relation === "Son" || e.relation === "Daughter") {
+      const isFamilyHead =
+        e.relation === "Husband" && e.name === e.familyHead;
+
+      if (isFamilyHead) {
+        // Find wife from same family
+        const wife = window.EVENTS.find(
+          p =>
+            p.family === e.family &&
+            p.familyHead === e.familyHead &&
+            p.relation === "Wife"
+        );
+
+        metaText = wife
+          ? `🎂 Birthday – Husband of ${wife.name} · ${timeText}`
+          : `🎂 Birthday · ${timeText}`;
+      }
+      else if (e.relation && e.familyHead) {
         metaText = `🎂 Birthday – ${e.relation} of ${e.familyHead} · ${timeText}`;
       }
-      else if (e.relation === "Wife") {
-        metaText = `🎂 Birthday – Wife of ${e.familyHead} · ${timeText}`;
-      }
       else {
-        // Husband (family head)
         metaText = `🎂 Birthday · ${timeText}`;
       }
     }
 
-    /* ✅ Anniversary logic (NO relation text) */
+    /* ✅ Anniversary logic (unchanged) */
     if (e.type === "anniversary") {
       metaText = `💍 Anniversary · ${timeText}`;
     }
@@ -485,7 +506,7 @@ function renderList(container, list, type) {
 
         <div class="row-details">
           <div class="row-name">
-            ${e.name}
+            ${e.name}${e.nickname ? ` (${e.nickname})` : ""}
           </div>
           <div class="row-meta">
             ${metaText}
@@ -529,6 +550,8 @@ function renderList(container, list, type) {
     </div>
   `;
 }
+
+
 
 /* -----------------------
    Pagination handlers
