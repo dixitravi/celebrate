@@ -423,30 +423,6 @@ body {
     align-self: flex-start;
   }
 
-  /* Controls become a GRID */
-  .masthead-controls {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto;
-    gap: 8px;
-  }
-
-  /* Row 2: Search + Theme */
-  .search-wrapper {
-    grid-column: 1 / 2;
-    grid-row: 1;
-  }
-
-  #themeToggle {
-    grid-column: 2 / 3;
-    grid-row: 1;
-    height: 30px;
-    min-width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   /* Row 3: Filters + Logout */
   .filters-row {
     grid-column: 1 / -1;
@@ -474,6 +450,11 @@ body {
 
   .search-wrapper input {
     width: 100%;
+  }
+
+  .search-wrapper input {
+    padding: 6px 10px;
+    font-size: 14px;
   }
 
 
@@ -651,11 +632,6 @@ body {
 /* ------------------------------
    Header Filters – Stacked Labels
 -------------------------------- */
-.masthead-controls {
-  display: flex;
-  align-items: flex-end;  /* ✅ aligns dropdown bottoms */
-  gap: 16px;
-}
 
 /* Filters row behaves inline on desktop */
 .filters-row {
@@ -765,4 +741,42 @@ body {
   width: 18px;
   height: 18px;
   fill: var(--text);
+}
+
+@media (max-width: 768px) {
+  .empty-state {
+    width: calc(100% - 32px);  /* ✅ MATCH rows visually */
+    margin: 16px auto;         /* ✅ center */
+    padding: 14px 16px;        /* ✅ internal spacing like rows */
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* Ensure controls are truly separate */
+  .masthead-controls {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Search takes remaining space but leaves room visually */
+  .search-wrapper {
+    flex: 1;
+  }
+
+  .search-wrapper input {
+    width: 97%;	
+    padding-right: 16px; /* ✅ breathing space before button */
+  }
+
+  /* Force visible gap before theme button */
+  #themeToggle {
+    margin-left: 12px;   /* ✅ THIS creates the visible gap */
+    flex-shrink: 0;
+    width: 40px;
+    height: 30px;
+  }
 }
