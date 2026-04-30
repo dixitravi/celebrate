@@ -356,7 +356,7 @@ function renderPriority(list) {
   // Empty state
   if (!list.length) {
     priorityList.innerHTML =
-      '<div class="empty-state">🎉 No upcoming birthdays or anniversaries this month</div>';
+		'<div class="empty-state" data-mobile-text="🎉 No upcoming events this month">🎉 No upcoming birthdays or anniversaries this month</div>';
     return;
   }
 
